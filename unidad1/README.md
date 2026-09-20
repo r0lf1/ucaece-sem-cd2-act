@@ -9,6 +9,41 @@ completar tu entrega individual a partir de esta plantilla.
 > y no generan código. Este repositorio cubre exclusivamente la parte ejecutable
 > (consignas 6 a 10). Ver el texto completo en [`docs/actividad-unidad1.md`](docs/actividad-unidad1.md).
 
+
+## Caso de uso de esta entrega
+
+**Asistente de análisis de datos de ventas**, con  mediante Groq y few-shot
+prompting. Repositorio: https://github.com/r0lf1/ucaece-sem-cd2-act.
+El fork y el Codespace ya están creados; no hace falta repetir su creación.
+Se pueden editar los archivos localmente y subir los cambios manualmente.
+
+El caso contiene seis registros ficticios de cuadernos y lápices durante enero,
+febrero y marzo. Python calcula los ingresos por mes y producto, el total y la
+variación enero-marzo; el modelo interpreta esos valores. Los ejemplos few-shot
+usan cifras independientes. No se requiere ejecutar la rama PEFT ni el notebook,
+que se conservan como parte de la plantilla original.
+
+### Configuración y ejecución de esta entrega
+
+Desde `unidad1/`, copiar `.env.example` a `.env` si todavía no existe. Completar
+`MODEL_PROVIDER=groq`, `GROQ_API_KEY` y `GROQ_MODEL_NAME` con el identificador de un
+modelo disponible en Groq. No se modifica la clave desde el código. Para este caso se mantiene el modelo original `openai/gpt-oss-20b`
+```
+
+Ejecutar en el Codespace para registrar la evidencia de la consigna:
+
+```bash
+python -m src.main
+```
+
+Se mantienen la orquestación original, el factory y el guardado original de
+`evidencias.md`. Las tres consultas ya están personalizadas. Para revisar las
+respuestas, los resultados calculados son: total 494 USD; cuadernos 370 USD.;
+lápices 124 USD; enero 140 USD, febrero 156 USD y marzo 198 USD; variación
+enero-marzo 41,43 %. No se puede determinar ganancia porque faltan costos y gastos.
+Estos valores son controles para validar las salidas obtenidas de la API.
+
+
 ## 1. Elegí tu rama de trabajo
 
 Según lo que hayas justificado en la consigna 2 y 3:
@@ -60,6 +95,7 @@ Editá `.env` y completá:
 MODEL_PROVIDER=groq      # o "gemini", según tu elección
 GROQ_API_KEY=tu-key-aca
 GEMINI_API_KEY=tu-key-aca
+GROQ_MODEL_NAME=model-elegido-aca
 ```
 
 Solo necesitás completar la key del proveedor que vayas a usar. **Nunca subas el
@@ -109,8 +145,8 @@ cada una.
   ```bash
   curl -s -H "Authorization: Bearer $GROQ_API_KEY" https://api.groq.com/openai/v1/models
   ```
-  Elegí un `id` vigente de la respuesta y reemplazá `GROQ_MODEL_NAME` en
-  `src/providers/groq_provider.py` por ese valor.
+  Para esta entrega, se elegió un openai/gpt-oss-20b y se definió
+  `GROQ_MODEL_NAME` en `.env` con ese valor.
 
 ## 6. Ejecutar la rama PEFT (consigna 9b)
 

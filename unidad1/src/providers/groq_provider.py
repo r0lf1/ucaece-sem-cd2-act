@@ -8,11 +8,9 @@ from src.providers.base_provider import BaseProvider
 
 # --- Constantes del proveedor (nada de "magic strings/numbers" inline) ---
 GROQ_API_KEY_ENV_VAR = "GROQ_API_KEY"
-# Modelo de pesos abiertos servido por Groq (GPT-OSS de OpenAI). El catálogo de modelos
-# de Groq cambia con el tiempo (algunos se dan de baja): si este deja de existir, correr
-# `curl -s -H "Authorization: Bearer $GROQ_API_KEY" https://api.groq.com/openai/v1/models`
-# para ver los modelos vigentes en tu cuenta y actualizar esta constante.
-GROQ_MODEL_NAME = "openai/gpt-oss-20b"
+# Elegir un ID disponible de la familia LLaMA, según la justificación del informe.
+# Se configura en .env porque el catálogo de Groq puede cambiar.
+GROQ_MODEL_NAME_ENV_VAR = "GROQ_MODEL_NAME"
 GROQ_TEMPERATURE = 0.7
 
 
@@ -26,12 +24,18 @@ class GroqProvider(BaseProvider):
                 f"Falta la variable de entorno {GROQ_API_KEY_ENV_VAR}. "
                 "Obtené una key gratuita en console.groq.com y agregala a tu archivo .env."
             )
+        self._model_name = os.environ.get(GROQ_MODEL_NAME_ENV_VAR)
+        if not self._model_name:
+            raise ValueError(
+                f"Falta la variable de entorno {GROQ_MODEL_NAME_ENV_VAR}. "
+                "Definila en .env con el ID de un modelo LLaMA disponible en Groq."
+            )
         self._client = Groq(api_key=api_key)
 
     def generate(self, prompt: str) -> str:
         try:
             respuesta = self._client.chat.completions.create(
-                model=GROQ_MODEL_NAME,
+                model=self._model_name,
                 temperature=GROQ_TEMPERATURE,
                 messages=[{"role": "user", "content": prompt}],
             )
