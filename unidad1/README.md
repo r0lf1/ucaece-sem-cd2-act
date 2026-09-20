@@ -12,7 +12,7 @@ completar tu entrega individual a partir de esta plantilla.
 
 ## Caso de uso de esta entrega
 
-**Asistente de análisis de datos de ventas**, con  mediante Groq y few-shot
+**Asistente de análisis de datos de ventas**, con GPT-OSS 20B mediante Groq y few-shot
 prompting. Repositorio: https://github.com/r0lf1/ucaece-sem-cd2-act.
 El fork y el Codespace ya están creados; no hace falta repetir su creación.
 Se pueden editar los archivos localmente y subir los cambios manualmente.
