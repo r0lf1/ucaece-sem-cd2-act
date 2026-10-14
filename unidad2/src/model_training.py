@@ -60,7 +60,8 @@ def entrenar_modelo(dataframe: pd.DataFrame, config: Config) -> DatosEntrenamien
     x_test = transformar_a_matriz_densa(preprocesador, x_test_crudo)
     nombres_features = obtener_nombres_features(preprocesador)
 
-    modelo = LogisticRegression(max_iter=MAX_ITERACIONES_MODELO, random_state=SEMILLA)
+    #modelo = LogisticRegression(max_iter=MAX_ITERACIONES_MODELO, random_state=SEMILLA)
+    modelo = LogisticRegression(max_iter=MAX_ITERACIONES_MODELO, random_state=SEMILLA, class_weight="balanced")
     modelo.fit(x_train, y_train)
 
     return DatosEntrenamiento(

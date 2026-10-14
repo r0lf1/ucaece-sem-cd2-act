@@ -19,9 +19,16 @@ class ThresholdOptimizerMitigator(BaseMitigator):
     def __init__(self, restriccion: str, estimador_base: BaseEstimator):
         if restriccion not in RESTRICCIONES_DISPONIBLES:
             raise ValueError(f"Restricción '{restriccion}' no soportada por ThresholdOptimizer.")
+        #self._optimizador = ThresholdOptimizer(
+        #    estimator=estimador_base,
+        #    constraints=restriccion,
+        #    predict_method="predict_proba",
+        #    prefit=True,
+        #)
         self._optimizador = ThresholdOptimizer(
             estimator=estimador_base,
             constraints=restriccion,
+            objective="balanced_accuracy_score",
             predict_method="predict_proba",
             prefit=True,
         )
@@ -29,5 +36,7 @@ class ThresholdOptimizerMitigator(BaseMitigator):
     def fit(self, x_train, y_train, sensible_train) -> None:
         self._optimizador.fit(x_train, y_train, sensitive_features=sensible_train)
 
+#    def predict(self, x_test, sensible_test):
+#        return self._optimizador.predict(x_test, sensitive_features=sensible_test)
     def predict(self, x_test, sensible_test):
-        return self._optimizador.predict(x_test, sensitive_features=sensible_test)
+        return self._optimizador.predict(x_test, sensitive_features=sensible_test, random_state=42)

@@ -1,3 +1,75 @@
+# Actividad 2: caso Amazon y auditoría con Resume
+
+## Caso y dataset
+
+El análisis teórico aborda el sistema experimental de reclutamiento de Amazon documentado por Dastin (2018).
+
+En la sección práctica se utiliza Resume, publicado por OpenIntro, con 4.870 currículums de un experimento de campo y respuestas reales de empleadores.
+
+Documentación:
+https://www.openintro.org/data/index.php?data=resume
+
+- Objetivo: received_callback -> 1 significa llamada recibida.
+- Atributo sensible: gender, con categorías f/m.
+- Preparación: exclusión de rownames, job_ad_id, firstname
+  y resume_quality.
+- Se conservan todas las filas y etiquetas originales.
+
+## Modelo y mitigación
+
+Se utiliza la regresión logística de la plantilla con class_weight="balanced", debido al desbalance del objetivo.
+
+La mitigación utiliza ThresholdOptimizer con restricción de paridad demográfica y objetivo balanced_accuracy_score.
+
+Se conserva la semilla 42 de la partición y se fija random_state=42 en la predicción de ThresholdOptimizer.
+
+## Ejecución
+
+Las dependencias y sus versiones están en requirements.txt.
+
+Guardar primero el CSV descargado como data/resume.csv.
+Desde unidad2, con el entorno compatible activado:
+
+```bash
+python3.11 -m pip install -r requirements.txt
+python3.11 -m src.preparar_resume
+python3.11 -m src.main
+```
+
+La configuración de .env.example debe ser:
+
+```dotenv
+DATASET_PATH=data/resume_limpio.csv
+TARGET_COLUMN=received_callback
+SENSITIVE_ATTRIBUTE=gender
+POSITIVE_LABEL=1
+MITIGATION_METHOD=threshold_optimizer
+FAIRNESS_CONSTRAINT=demographic_parity
+```
+
+El preparador lee el CSV local y genera data/resume_limpio.csv.
+Los CSV y .env no se versionan.
+
+## Resultados
+
+| Escenario | Exactitud | DPD | EOD |
+|---|---:|---:|---:|
+| Modelo base | 0.658 | 0.104 | 0.111 |
+| ThresholdOptimizer | 0.591 | 0.012 | 0.036 |
+
+El modelo base selecciona proporcionalmente más postulaciones f que m. La dirección de esta diferencia no coincide con la penalización femenina documentada en Amazon.
+
+La mitigación reduce ambas disparidades, con una pérdida de exactitud. La interpretación completa está en evidencias.md y los gráficos se encuentran en outputs/.
+
+## Explicabilidad y limitaciones
+
+Los casos SHAP seleccionados son los índices 5 y 0 del conjunto de prueba, con contribuciones absolutas de gender de 0.147 y 0.030. Ambos tienen predicción 0 y etiqueta observada 0.
+
+Los nombres automáticos “discrimina” y “no discrimina” no constituyen una prueba de discriminación ni de su ausencia: representan ejemplos de mayor y menor contribución del atributo sensible.
+
+La etiqueta mide llamadas, no idoneidad ni contratación. Se utiliza una única partición y pueden existir anuncios compartidos entre entrenamiento y prueba. Los umbrales se ajustan con los datos de entrenamiento. Los resultados no reproducen el sistema interno de Amazon, pero intenta abarcar un escenario similar.
+
+
 # Unidad 2 — Calidad, Seguridad y Mejores Prácticas: auditoría de equidad
 
 Plantilla base para el componente práctico (consignas 7 a 11) del Análisis de Caso
