@@ -36,7 +36,7 @@ python3.11 -m src.preparar_resume
 python3.11 -m src.main
 ```
 
-La configuración de .env.example debe ser:
+La configuración de .env debe ser:
 
 ```dotenv
 DATASET_PATH=data/resume_limpio.csv
