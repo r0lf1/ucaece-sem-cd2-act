@@ -1,7 +1,7 @@
 # Resultados — Unidad 3: MLOps/LLMOps
 
-**Estudiante:** <!-- Completar con tu nombre y apellido -->
-**Fecha:** <!-- Completar con la fecha de entrega -->
+**Estudiante:** Montenegro Lucas Horacio
+**Fecha:** 01/11/2026
 
 ---
 
@@ -31,25 +31,24 @@
 ![Modelo registrado](capturas/7_registro.png)
 
 La profundidad 3 obtuvo los mejores resultados, con accuracy y F1 macro de 0.978, superando a la profundidad 1.
-Con profundidad 4, ambas métricas bajaron a 0.889. con 7,10,15,20 y 100 alcanzaron 0.933, sin superar a la configuración seleccionada.
+Con profundidad 4, ambas métricas bajaron a 0.889. Con profundidad 7,10,15,20 y 100 alcanzaron 0.933, sin superar a la configuración seleccionada.
 Esto muestra que aumentar la profundidad máxima no garantiza mejores resultados y que conservar todas las corridas permite justificar la elección.
 
 ---
 
 ## Consigna 8: Serving con FastAPI
 
-| Prueba | Largo sépalo | Ancho sépalo | Largo pétalo | Ancho pétalo |Resultado |
+| Entrada | Respuesta de la API |
 |---------|---------------------|
-| 1 | 5.1 | 3.5 | 1.4 | 0.2 | setosa, clase 0 |
-| 2 | 6.0 | 2.7 | 4.5 | 1.4 | versicolor, clase 1 |
-| 3 | 6.9 | 3.1 | 5.8 | 2.2 | virginica, clase 2 |
-| 4 | "abc" | 3.1 | - | - | 422 | Error de validación, sin predicción |
+| {"largo_sepalo_cm": 5.1, "ancho_sepalo_cm": 3.5, "largo_petalo_cm": 1.4, "ancho_petalo_cm": 0.2} | setosa, clase 0 |
+| {"largo_sepalo_cm": 6.0, "ancho_sepalo_cm": 2.7, "largo_petalo_cm": 4.5, "ancho_petalo_cm": 1.4} | versicolor, clase 1 |
+| {"largo_sepalo_cm": 6.9, "ancho_sepalo_cm": 3.1, "largo_petalo_cm": 5.8, "ancho_petalo_cm": 2.2} | virginica, clase 2 |
+| {"largo_sepalo_cm": "abc", "ancho_sepalo_cm": 3.1} | Error de validación, faltan datos y hay datos erréneos, sin predicción |
 
 ![Documentación de la API](capturas/8_docs.png)
 
 ![Predicciones](capturas/8_predicciones.png)
 
-> Escribí acá tu respuesta (3 a 5 líneas).
 Al enviar la entrada inválida, la API respondió con HTTP 422 y detalló los errores de validación.
 El valor "abc" no pudo interpretarse como número y faltaban los campos correspondientes al largo y ancho del pétalo.
 La solicitud fue rechazada durante la validación de entrada, antes de ejecutar la predicción del modelo.
@@ -60,7 +59,6 @@ Este control es importante en producción porque evita procesar datos incompleto
 
 ![Docker](capturas/9_docker.png)
 
-> Escribí acá tu respuesta (3 a 5 líneas).
 Las imágenes modelo-u3:1.0 y modelo-u3:1.1 permitirían aplicar la estrategia blue-green.
 La versión 1.0 seguiría atendiendo las solicitudes mientras se ejecuta y valida la versión 1.1 en un entorno separado.
 Una vez comprobado su funcionamiento, se dirigiría todo el tráfico hacia la versión 1.1, conservando la anterior disponible.
@@ -77,6 +75,5 @@ Si aparecieran errores o una degradación, se podría volver a dirigir el tráfi
 
 ![LLMOps](capturas/opcional_llmops.png)
 
-> Escribí acá tu interpretación (2 a 3 líneas).
 Ambas plantillas acertaron el 100 % de las reseñas evaluadas: few-shot consumió 78 tokens más, pero presentó una menor latencia media en esta ejecución.
 Para esta prueba elegiría zero-shot porque obtuvo los mismos aciertos con menor consumo de tokens.
